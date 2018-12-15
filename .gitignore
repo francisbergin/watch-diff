@@ -1,0 +1,6 @@
+__pycache__/
+build/
+dist/
+venv/
+watch_diff.egg-info/
+.watch-diff.json

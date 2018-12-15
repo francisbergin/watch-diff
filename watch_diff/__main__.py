@@ -1,0 +1,68 @@
+"""
+"""
+
+import argparse
+import datetime
+import logging
+import time
+
+from . import command
+
+
+logger = logging.getLogger(__name__)
+
+parser = argparse.ArgumentParser(description='Watch command output and get notified on changes')
+parser.add_argument('-v', '--verbose', action='store_true', help='enable program verbosity')
+parser.add_argument('-i', '--interval', type=int, default=5, metavar='SECONDS', help='number of seconds between executions')
+parser.add_argument('-n', '--notify', action='store_true', help='send notification using notify-send')
+parser.add_argument('-e', '--email', type=str, metavar='RECIPIENT', dest='recipient', help='send email to recipient')
+parser.add_argument('command', help='the command to watch')
+
+
+def _main():
+    args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.INFO)
+    else:
+        logging.basicConfig(level=logging.WARNING)
+
+    if args.recipient:
+        from . import email
+    if args.notify:
+        from . import notify
+
+    first_run = True
+    c = command.Command(args.command)
+
+    while True:
+        now = str(datetime.datetime.now())
+        logger.info(f'executing command with time {now}')
+        diff = c.run(now)
+
+        if first_run:
+            print(f'[{now}] first_run:')
+            print(c.to_console())
+        elif diff:
+            print(f'[{now}] diff:')
+            print(diff.to_console())
+            subject = f'watch-diff diff: {args.command}'
+            if args.recipient:
+                logger.info(f'sending diff email to {args.recipient}')
+                email.send_email(args.recipient, subject, str(diff), diff.to_html(full_html=True))
+            if args.notify:
+                logger.info('sending diff notify notification')
+                notify.send_message(subject, str(diff))
+        else:
+            print(f'[{now}] no diff')
+
+        logger.info(f'sleeping for {args.interval} seconds')
+        time.sleep(args.interval)
+        first_run = False
+
+
+def main():
+    try:
+        _main()
+    except KeyboardInterrupt:
+        pass
