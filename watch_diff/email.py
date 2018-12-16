@@ -28,10 +28,12 @@ else:
     config = {}
 
 
-smtp_host = config.get('SMTP_HOST') or input('SMTP_HOST: ')
-smtp_port = int(config.get('SMTP_PORT')) or int(input('SMTP_PORT: '))
-smtp_user = config.get('SMTP_USER') or input('SMTP_USER: ')
-smtp_pass = config.get('SMTP_PASS') or getpass.getpass('SMTP_PASS: ')
+smtp_host = config.get('SMTP_HOST', os.environ.get('SMTP_HOST')) or input('SMTP_HOST: ')
+smtp_port = config.get('SMTP_PORT', os.environ.get('SMTP_PORT')) or input('SMTP_PORT: ')
+smtp_user = config.get('SMTP_USER', os.environ.get('SMTP_USER')) or input('SMTP_USER: ')
+smtp_pass = config.get('SMTP_PASS', os.environ.get('SMTP_PASS')) or getpass.getpass('SMTP_PASS: ')
+
+smtp_port = int(smtp_port)
 
 
 def send_email(recipient, subject, text, html):
