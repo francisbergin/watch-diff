@@ -13,6 +13,6 @@ test:
 
 release: clean build tests
 	git commit -am v$(version)
-	git tag -a v$(version) -m v$(version)
+	git tag -s v$(version) -m v$(version)
 	git push && git push --tags
 	twine upload dist/*
