@@ -6,6 +6,8 @@ import datetime
 import logging
 import time
 
+from email.utils import make_msgid
+
 from . import command
 
 
@@ -34,28 +36,35 @@ def _main():
 
     first_run = True
     c = command.Command(args.command)
+    previous_msg_id = None
 
     while True:
         now = str(datetime.datetime.now())
         logger.info(f'executing command with time {now}')
         diff = c.run(now)
+        msg_id = make_msgid()
 
         if first_run:
             print(f'[{now}] first_run:')
             print(c.to_console())
+            subject = f'watch-diff first_run: {args.command}'
+            if args.recipient:
+                logger.info(f'sending first_run email to {args.recipient}')
+                email.send_email(args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
         elif diff:
             print(f'[{now}] diff:')
             print(diff.to_console())
             subject = f'watch-diff diff: {args.command}'
             if args.recipient:
                 logger.info(f'sending diff email to {args.recipient}')
-                email.send_email(args.recipient, subject, str(diff), diff.to_html(full_html=True))
+                email.send_email(args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
             if args.notify:
                 logger.info('sending diff notify notification')
                 notify.send_message(subject, str(diff))
         else:
             print(f'[{now}] no diff')
 
+        previous_msg_id = msg_id
         logger.info(f'sleeping for {args.interval} seconds')
         time.sleep(args.interval)
         first_run = False

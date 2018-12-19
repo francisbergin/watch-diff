@@ -10,6 +10,8 @@ import logging
 import os
 import smtplib
 
+from email.utils import make_msgid
+
 
 logger = logging.getLogger(__name__)
 
@@ -36,7 +38,7 @@ smtp_pass = config.get('SMTP_PASS', os.environ.get('SMTP_PASS')) or getpass.getp
 smtp_port = int(smtp_port)
 
 
-def send_email(recipient, subject, text, html):
+def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None):
     logger.info('sending email')
 
     msg = email.mime.multipart.MIMEMultipart('alternative')
@@ -44,6 +46,10 @@ def send_email(recipient, subject, text, html):
     msg['From'] = f'watch-diff <{smtp_user}>'
     msg['To'] = recipient
     msg['Subject'] = subject
+    msg['Message-ID'] = msg_id or make_msgid()
+
+    if previous_msg_id:
+        msg['In-Reply-To'] = previous_msg_id
 
     part1 = email.mime.text.MIMEText(text, 'plain')
     part2 = email.mime.text.MIMEText(html, 'html')
