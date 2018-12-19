@@ -1,15 +1,14 @@
 """
 """
 
-import email
-import email.mime.multipart
-import email.mime.text
 import getpass
 import json
 import logging
 import os
 import smtplib
 
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from email.utils import make_msgid
 
 
@@ -41,7 +40,7 @@ smtp_port = int(smtp_port)
 def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None):
     logger.info('sending email')
 
-    msg = email.mime.multipart.MIMEMultipart('alternative')
+    msg = MIMEMultipart('alternative')
 
     msg['From'] = f'watch-diff <{smtp_user}>'
     msg['To'] = recipient
@@ -51,8 +50,8 @@ def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None
     if previous_msg_id:
         msg['In-Reply-To'] = previous_msg_id
 
-    part1 = email.mime.text.MIMEText(text, 'plain')
-    part2 = email.mime.text.MIMEText(html, 'html')
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
 
     msg.attach(part1)
     msg.attach(part2)
