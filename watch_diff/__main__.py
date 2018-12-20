@@ -42,7 +42,6 @@ def _main():
         now = str(datetime.datetime.now())
         logger.info(f'executing command with time {now}')
         diff = c.run(now)
-        msg_id = make_msgid()
 
         if first_run:
             print(f'[{now}] first_run:')
@@ -50,21 +49,24 @@ def _main():
             subject = f'watch-diff first_run: {args.command}'
             if args.recipient:
                 logger.info(f'sending first_run email to {args.recipient}')
+                msg_id = make_msgid()
                 email.send_email(args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
+                previous_msg_id = msg_id
         elif diff:
             print(f'[{now}] diff:')
             print(diff.to_console())
             subject = f'watch-diff diff: {args.command}'
             if args.recipient:
                 logger.info(f'sending diff email to {args.recipient}')
+                msg_id = make_msgid()
                 email.send_email(args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
+                previous_msg_id = msg_id
             if args.notify:
                 logger.info('sending diff notify notification')
                 notify.send_message(subject, str(diff))
         else:
             print(f'[{now}] no diff')
 
-        previous_msg_id = msg_id
         logger.info(f'sleeping for {args.interval} seconds')
         time.sleep(args.interval)
         first_run = False
