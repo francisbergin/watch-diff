@@ -16,26 +16,10 @@ from email.utils import make_msgid
 logger = logging.getLogger(__name__)
 
 
-config_filename = '.watch-diff.json'
-global_filename = os.path.join(os.path.expanduser('~'), config_filename)
-
-
-if os.path.isfile(config_filename):
-    with open(config_filename) as f:
-        config = json.loads(f.read())
-elif os.path.isfile(global_filename):
-    with open(global_filename) as f:
-        config = json.loads(f.read())
-else:
-    config = {}
-
-
-smtp_host = config.get('SMTP_HOST', os.environ.get('SMTP_HOST')) or input('SMTP_HOST: ')
-smtp_port = config.get('SMTP_PORT', os.environ.get('SMTP_PORT')) or input('SMTP_PORT: ')
-smtp_user = config.get('SMTP_USER', os.environ.get('SMTP_USER')) or input('SMTP_USER: ')
-smtp_pass = config.get('SMTP_PASS', os.environ.get('SMTP_PASS')) or getpass.getpass('SMTP_PASS: ')
-
-smtp_port = int(smtp_port)
+smtp_host = os.environ.get('SMTP_HOST') or input('SMTP_HOST: ')
+smtp_port = os.environ.get('SMTP_PORT') or input('SMTP_PORT: ')
+smtp_user = os.environ.get('SMTP_USER') or input('SMTP_USER: ')
+smtp_pass = os.environ.get('SMTP_PASS') or getpass.getpass('SMTP_PASS: ')
 
 
 def _repeat_on_exception(num_times=3, exception=None):
