@@ -14,7 +14,13 @@ from . import command
 logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Watch command output and get notified on changes')
-parser.add_argument('-v', '--verbose', action='store_true', help='enable program verbosity')
+logging_group = parser.add_argument_group('logging level').add_mutually_exclusive_group()
+logging_group.add_argument('-v', '--verbose', action='store_const',
+                           const=logging.INFO, default=logging.CRITICAL,
+                           dest='loglevel', help='enable verbose output')
+logging_group.add_argument('-d', '--debug', action='store_const',
+                           const=logging.DEBUG, dest='loglevel',
+                           help='show debugging statements')
 parser.add_argument('-i', '--interval', type=int, default=5, metavar='SECONDS', help='number of seconds between executions')
 parser.add_argument('-r', '--recipient', help='send email to recipient')
 parser.add_argument('command', help='the command to watch')
@@ -22,11 +28,7 @@ parser.add_argument('command', help='the command to watch')
 
 def _main():
     args = parser.parse_args()
-
-    if args.verbose:
-        logging.basicConfig(level=logging.INFO)
-    else:
-        logging.basicConfig(level=logging.WARNING)
+    logging.basicConfig(level=args.loglevel)
 
     if args.recipient:
         from . import email
