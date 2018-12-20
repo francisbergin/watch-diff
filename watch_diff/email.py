@@ -42,7 +42,7 @@ def _repeat_on_exception(num_times=3, exception=None):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-            count = 0
+            count = 1
             while True:
                 try:
                     logger.info(f'running func: "{func.__name__}", count: {count}')
