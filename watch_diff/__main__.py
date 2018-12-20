@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 parser = argparse.ArgumentParser(description='Watch command output and get notified on changes')
 parser.add_argument('-v', '--verbose', action='store_true', help='enable program verbosity')
 parser.add_argument('-i', '--interval', type=int, default=5, metavar='SECONDS', help='number of seconds between executions')
-parser.add_argument('-e', '--email', type=str, metavar='RECIPIENT', dest='recipient', help='send email to recipient')
+parser.add_argument('-r', '--recipient', help='send email to recipient')
 parser.add_argument('command', help='the command to watch')
 
 
