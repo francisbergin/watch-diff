@@ -1,6 +1,7 @@
 """
 """
 
+import functools
 import getpass
 import json
 import logging
@@ -37,6 +38,35 @@ smtp_pass = config.get('SMTP_PASS', os.environ.get('SMTP_PASS')) or getpass.getp
 smtp_port = int(smtp_port)
 
 
+def _repeat_on_exception(num_times=3, exception=None):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            count = 0
+            while True:
+                try:
+                    logger.info(f'running func: "{func.__name__}", count: {count}')
+                    return func(*args, **kwargs)
+                except Exception as e:
+                    if (not exception or e.__class__ == exception) and count < num_times:
+                        count += 1
+                        continue
+                    else:
+                        raise
+        return wrapper
+    return decorator
+
+
+@_repeat_on_exception(3, smtplib.SMTPServerDisconnected)
+def _smtp_connect(smtp_host, smtp_port):
+    return smtplib.SMTP(host=smtp_host, port=smtp_port)
+
+
+@_repeat_on_exception(3, smtplib.SMTPAuthenticationError)
+def _smtp_login(session, smtp_user, smtp_pass):
+    session.login(smtp_user, smtp_pass)
+
+
 def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None):
     logger.info('sending email')
 
@@ -56,11 +86,11 @@ def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None
     msg.attach(part1)
     msg.attach(part2)
 
-    s = smtplib.SMTP(host=smtp_host, port=smtp_port)
+    s = _smtp_connect(smtp_host, smtp_port)
     s.ehlo()
     s.starttls()
     s.ehlo()
-    s.login(smtp_user, smtp_pass)
+    _smtp_login(s, smtp_user, smtp_pass)
     s.sendmail(smtp_user, recipient, msg.as_string())
     s.quit()
 
