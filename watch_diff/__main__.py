@@ -49,7 +49,7 @@ def _main():
             if args.recipient:
                 logger.info(f'sending first_run email to {args.recipient}')
                 msg_id = make_msgid()
-                email.send_email(args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
+                email.send_email('watch-diff', args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
                 previous_msg_id = msg_id
         elif diff:
             print(f'[{now}] diff:')
@@ -58,7 +58,7 @@ def _main():
             if args.recipient:
                 logger.info(f'sending diff email to {args.recipient}')
                 msg_id = make_msgid()
-                email.send_email(args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
+                email.send_email('watch-diff', args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
                 previous_msg_id = msg_id
         else:
             print(f'[{now}] no diff')

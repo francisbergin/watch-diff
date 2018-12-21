@@ -51,12 +51,12 @@ def _smtp_login(session, smtp_user, smtp_pass):
     session.login(smtp_user, smtp_pass)
 
 
-def send_email(recipient, subject, text, html, msg_id=None, previous_msg_id=None):
+def send_email(from_name, recipient, subject, text, html, msg_id=None, previous_msg_id=None):
     logger.info('sending email')
 
     msg = MIMEMultipart('alternative')
 
-    msg['From'] = f'watch-diff <{smtp_user}>'
+    msg['From'] = f'{from_name} <{smtp_user}>'
     msg['To'] = recipient
     msg['Subject'] = subject
     msg['Message-ID'] = msg_id or make_msgid()
