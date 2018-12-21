@@ -12,7 +12,7 @@ pip install watch-diff
 
 ```console
 $ watch-diff --help
-usage: watch-diff [-h] [-v] [-i SECONDS] [-n] [-e RECIPIENT] command
+usage: watch-diff [-h] [-v | -d] [-i SECONDS] [-r RECIPIENT] command
 
 Watch command output and get notified on changes
 
@@ -21,12 +21,14 @@ positional arguments:
 
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --verbose         enable program verbosity
   -i SECONDS, --interval SECONDS
                         number of seconds between executions
-  -n, --notify          send notification using notify-send
-  -e RECIPIENT, --email RECIPIENT
+  -r RECIPIENT, --recipient RECIPIENT
                         send email to recipient
+
+logging level:
+  -v, --verbose         enable verbose output
+  -d, --debug           show debugging statements
 ```
 
 ## development
