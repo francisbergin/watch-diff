@@ -10,7 +10,7 @@ import smtplib
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.utils import make_msgid
+from email.utils import make_msgid, formatdate
 
 
 logger = logging.getLogger(__name__)
@@ -59,6 +59,7 @@ def send_email(from_name, recipient, subject, text, html, msg_id=None, previous_
     msg['From'] = f'{from_name} <{smtp_user}>'
     msg['To'] = recipient
     msg['Subject'] = subject
+    msg['Date'] = formatdate()
     msg['Message-ID'] = msg_id or make_msgid()
 
     if previous_msg_id:
