@@ -3,12 +3,15 @@
 
 import argparse
 import datetime
+import getpass
 import logging
+import os
 import time
 
 from email.utils import make_msgid
 
 from . import command
+from . import email
 
 
 logger = logging.getLogger(__name__)
@@ -29,9 +32,14 @@ parser.add_argument('command', help='the command to watch')
 def _main():
     args = parser.parse_args()
     logging.basicConfig(level=args.loglevel)
+    e = None
 
     if args.recipient:
-        from . import email
+        smtp_host = os.environ.get('SMTP_HOST') or input('SMTP_HOST: ')
+        smtp_port = os.environ.get('SMTP_PORT') or input('SMTP_PORT: ')
+        smtp_user = os.environ.get('SMTP_USER') or input('SMTP_USER: ')
+        smtp_pass = os.environ.get('SMTP_PASS') or getpass.getpass('SMTP_PASS: ')
+        e = email.Email(smtp_host, smtp_port, smtp_user, smtp_pass, 'watch-diff', args.recipient)
 
     first_run = True
     c = command.Command(args.command)
@@ -46,19 +54,19 @@ def _main():
             print('[{}] first_run:'.format(now))
             print(c.to_console())
             subject = 'watch-diff first_run: {}'.format(args.command)
-            if args.recipient:
+            if e:
                 logger.info('sending first_run email to {}'.format(args.recipient))
                 msg_id = make_msgid()
-                email.send_email('watch-diff', args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
+                e.send_email(subject, str(c), c.to_html(full_html=True), msg_id)
                 previous_msg_id = msg_id
         elif diff:
             print('[{}] diff:'.format(now))
             print(diff.to_console())
             subject = 'watch-diff diff: {}'.format(args.command)
-            if args.recipient:
+            if e:
                 logger.info('sending diff email to {}'.format(args.recipient))
                 msg_id = make_msgid()
-                email.send_email('watch-diff', args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
+                e.send_email(subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
                 previous_msg_id = msg_id
         else:
             print('[{}] no diff'.format(now))

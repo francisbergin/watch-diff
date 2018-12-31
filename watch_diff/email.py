@@ -2,10 +2,7 @@
 """
 
 import functools
-import getpass
-import json
 import logging
-import os
 import smtplib
 
 from email.mime.multipart import MIMEMultipart
@@ -14,12 +11,6 @@ from email.utils import make_msgid, formatdate
 
 
 logger = logging.getLogger(__name__)
-
-
-smtp_host = os.environ.get('SMTP_HOST') or input('SMTP_HOST: ')
-smtp_port = os.environ.get('SMTP_PORT') or input('SMTP_PORT: ')
-smtp_user = os.environ.get('SMTP_USER') or input('SMTP_USER: ')
-smtp_pass = os.environ.get('SMTP_PASS') or getpass.getpass('SMTP_PASS: ')
 
 
 def _repeat_on_exception(num_times=3, exception=None):
@@ -41,42 +32,50 @@ def _repeat_on_exception(num_times=3, exception=None):
     return decorator
 
 
-@_repeat_on_exception(3, smtplib.SMTPServerDisconnected)
-def _smtp_connect(smtp_host, smtp_port):
-    return smtplib.SMTP(host=smtp_host, port=smtp_port)
+class Email:
 
+    def __init__(self, smtp_host, smtp_port, smtp_user, smtp_pass, from_name, recipient):
+        self._smtp_host = smtp_host
+        self._smtp_port = smtp_port
+        self._smtp_user = smtp_user
+        self._smtp_pass = smtp_pass
+        self._from_name = from_name
+        self._recipient = recipient
 
-@_repeat_on_exception(3, smtplib.SMTPAuthenticationError)
-def _smtp_login(session, smtp_user, smtp_pass):
-    session.login(smtp_user, smtp_pass)
+    @_repeat_on_exception(3, smtplib.SMTPServerDisconnected)
+    def _smtp_connect(self, smtp_host, smtp_port):
+        return smtplib.SMTP(host=self._smtp_host, port=self._smtp_port)
 
+    @_repeat_on_exception(3, smtplib.SMTPAuthenticationError)
+    def _smtp_login(self, session, smtp_user, smtp_pass):
+        session.login(self._smtp_user, self._smtp_pass)
 
-def send_email(from_name, recipient, subject, text, html, msg_id=None, previous_msg_id=None):
-    logger.info('sending email')
+    def send_email(self, subject, text, html, msg_id=None, previous_msg_id=None):
+        logger.info('sending email')
 
-    msg = MIMEMultipart('alternative')
+        msg = MIMEMultipart('alternative')
 
-    msg['From'] = '{} <{}>'.format(from_name, smtp_user)
-    msg['To'] = recipient
-    msg['Subject'] = subject
-    msg['Date'] = formatdate()
-    msg['Message-ID'] = msg_id or make_msgid()
+        msg['From'] = '{} <{}>'.format(self._from_name, self._smtp_user)
+        msg['To'] = self._recipient
+        msg['Subject'] = subject
+        msg['Date'] = formatdate()
+        msg['Message-ID'] = msg_id or make_msgid()
 
-    if previous_msg_id:
-        msg['In-Reply-To'] = previous_msg_id
+        if previous_msg_id:
+            msg['In-Reply-To'] = previous_msg_id
 
-    part1 = MIMEText(text, 'plain')
-    part2 = MIMEText(html, 'html')
+        part1 = MIMEText(text, 'plain')
+        part2 = MIMEText(html, 'html')
 
-    msg.attach(part1)
-    msg.attach(part2)
+        msg.attach(part1)
+        msg.attach(part2)
 
-    s = _smtp_connect(smtp_host, smtp_port)
-    s.ehlo()
-    s.starttls()
-    s.ehlo()
-    _smtp_login(s, smtp_user, smtp_pass)
-    s.sendmail(smtp_user, recipient, msg.as_string())
-    s.quit()
+        s = self._smtp_connect(self._smtp_host, self._smtp_port)
+        s.ehlo()
+        s.starttls()
+        s.ehlo()
+        self._smtp_login(s, self._smtp_user, self._smtp_pass)
+        s.sendmail(self._smtp_user, self._recipient, msg.as_string())
+        s.quit()
 
-    logger.info('email sent successfully')
+        logger.info('email sent successfully')
