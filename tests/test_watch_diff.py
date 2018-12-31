@@ -24,6 +24,13 @@ class TestWatchDiff(unittest.TestCase):
         self.assertTrue(watch_diff.HTMLFormatter)
         self.assertTrue(watch_diff.OutputFormatting)
 
+    def test_command(self):
+        c = watch_diff.Command('date')
+        self.assertFalse(c)
+        d = c.run()
+        self.assertTrue(c)
+        self.assertTrue(d)
+
     @unittest.skipIf(not smtp_host, 'SMTP_HOST is not available')
     @unittest.skipIf(not smtp_port, 'SMTP_PORT is not available')
     @unittest.skipIf(not smtp_user, 'SMTP_USER is not available')
