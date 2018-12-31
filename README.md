@@ -41,7 +41,7 @@ python3 -m venv venv && . venv/bin/activate
 pip install -e .[dev]
 
 # running tests
-python -m unittest
+python -m unittest -v
 
 # running tests for all supported python versions
 tox
