@@ -20,7 +20,7 @@ setup(
     author='Francis Bergin',
     author_email='me@francisbergin.com',
     python_requires='>=3.6.0',
-    url='https://git.sr.ht/~francisbergin/watch-diff',
+    url='https://github.com/francisbergin/watch-diff',
     packages=['watch_diff'],
     extras_require={
         'dev': [
