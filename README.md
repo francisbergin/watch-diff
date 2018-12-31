@@ -39,4 +39,7 @@ python3.6 -m venv venv && . venv/bin/activate
 
 # editable install
 pip install -e .[dev]
+
+# running tests
+python -m unittest
 ```
