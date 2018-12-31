@@ -42,4 +42,7 @@ pip install -e .[dev]
 
 # running tests
 python -m unittest
+
+# running tests for all supported python versions
+tox
 ```

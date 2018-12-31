@@ -25,6 +25,7 @@ setup(
     extras_require={
         'dev': [
             'setuptools==40.6.3',
+            'tox==3.6.1',
             'twine==1.12.1',
             'wheel==0.32.3',
         ]
