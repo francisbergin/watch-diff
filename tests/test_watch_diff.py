@@ -28,6 +28,6 @@ class TestWatchDiff(unittest.TestCase):
     @unittest.skipIf(not smtp_port, 'SMTP_PORT is not available')
     @unittest.skipIf(not smtp_user, 'SMTP_USER is not available')
     @unittest.skipIf(not smtp_pass, 'SMTP_PASS is not available')
-    def test_send_email(self):
+    def test_email(self):
         e = watch_diff.Email(smtp_host, smtp_port, smtp_user, smtp_pass, 'watch-diff-tests', smtp_user)
         e.send_email('watch diff tests', 'text', 'html')
