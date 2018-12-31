@@ -29,7 +29,7 @@ def _repeat_on_exception(num_times=3, exception=None):
             count = 1
             while True:
                 try:
-                    logger.info(f'running func: "{func.__name__}", count: {count}')
+                    logger.info('running func: "{}", count: {}'.format(func.__name__, count))
                     return func(*args, **kwargs)
                 except Exception as e:
                     if (not exception or e.__class__ == exception) and count < num_times:
@@ -56,7 +56,7 @@ def send_email(from_name, recipient, subject, text, html, msg_id=None, previous_
 
     msg = MIMEMultipart('alternative')
 
-    msg['From'] = f'{from_name} <{smtp_user}>'
+    msg['From'] = '{} <{}>'.format(from_name, smtp_user)
     msg['To'] = recipient
     msg['Subject'] = subject
     msg['Date'] = formatdate()

@@ -39,31 +39,31 @@ def _main():
 
     while True:
         now = str(datetime.datetime.now())
-        logger.info(f'executing command with time {now}')
+        logger.info('executing command with time {}'.format(now))
         diff = c.run(now)
 
         if first_run:
-            print(f'[{now}] first_run:')
+            print('[{}] first_run:'.format(now))
             print(c.to_console())
-            subject = f'watch-diff first_run: {args.command}'
+            subject = 'watch-diff first_run: {}'.format(args.command)
             if args.recipient:
-                logger.info(f'sending first_run email to {args.recipient}')
+                logger.info('sending first_run email to {}'.format(args.recipient))
                 msg_id = make_msgid()
                 email.send_email('watch-diff', args.recipient, subject, str(c), c.to_html(full_html=True), msg_id)
                 previous_msg_id = msg_id
         elif diff:
-            print(f'[{now}] diff:')
+            print('[{}] diff:'.format(now))
             print(diff.to_console())
-            subject = f'watch-diff diff: {args.command}'
+            subject = 'watch-diff diff: {}'.format(args.command)
             if args.recipient:
-                logger.info(f'sending diff email to {args.recipient}')
+                logger.info('sending diff email to {}'.format(args.recipient))
                 msg_id = make_msgid()
                 email.send_email('watch-diff', args.recipient, subject, str(diff), diff.to_html(full_html=True), msg_id, previous_msg_id)
                 previous_msg_id = msg_id
         else:
-            print(f'[{now}] no diff')
+            print('[{}] no diff'.format(now))
 
-        logger.info(f'sleeping for {args.interval} seconds')
+        logger.info('sleeping for {} seconds'.format(args.interval))
         time.sleep(args.interval)
         first_run = False
 

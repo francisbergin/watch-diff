@@ -19,7 +19,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Francis Bergin',
     author_email='me@francisbergin.com',
-    python_requires='>=3.6.0',
+    python_requires='>=3.4',
     url='https://github.com/francisbergin/watch-diff',
     packages=['watch_diff'],
     extras_require={

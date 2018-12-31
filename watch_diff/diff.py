@@ -20,12 +20,12 @@ class Diff(format.OutputFormatting):
         lines = self._diff.splitlines()
         output = []
         for line in lines[:2]:
-            output.append(f'{formatter.header_start}{line}{formatter.header_end}')
+            output.append('{}{}{}'.format(formatter.header_start, line, formatter.header_end))
         for line in lines[2:]:
             if line[0] == '+':
-                output.append(f'{formatter.addition_start}{line}{formatter.addition_end}')
+                output.append('{}{}{}'.format(formatter.addition_start, line, formatter.addition_end))
             elif line[0] == '-':
-                output.append(f'{formatter.subtraction_start}{line}{formatter.subtraction_end}')
+                output.append('{}{}{}'.format(formatter.subtraction_start, line, formatter.subtraction_end))
             else:
                 output.append(line)
         return '\n'.join(output)
