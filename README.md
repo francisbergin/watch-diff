@@ -1,5 +1,6 @@
 # watch-diff
 
+[![Build Status](https://travis-ci.com/francisbergin/watch-diff.svg?token=re71XWM3LDYXreMfwvp8&branch=master)](https://travis-ci.com/francisbergin/watch-diff)
 [![PyPI](https://img.shields.io/pypi/v/watch-diff.svg)](https://pypi.org/project/watch-diff)
 
 ## setup
