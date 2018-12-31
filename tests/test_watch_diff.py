@@ -3,13 +3,17 @@
 
 import unittest
 
+import watch_diff
+
 
 class TestWatchDiff(unittest.TestCase):
 
-    def test_imports(self):
+    def test_api_available(self):
 
-        import watch_diff
-        import watch_diff.command
-        import watch_diff.diff
-        import watch_diff.email
-        import watch_diff.format
+        self.assertTrue(watch_diff.Command)
+        self.assertTrue(watch_diff.Diff)
+        self.assertTrue(watch_diff.Email)
+        self.assertTrue(watch_diff.DefaultFormatter)
+        self.assertTrue(watch_diff.ConsoleFormatter)
+        self.assertTrue(watch_diff.HTMLFormatter)
+        self.assertTrue(watch_diff.OutputFormatting)
