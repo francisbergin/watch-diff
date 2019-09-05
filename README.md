@@ -32,6 +32,16 @@ logging level:
   -d, --debug           show debugging statements
 ```
 
+## credentials
+
+```shell
+export SMTP_HOST=qwer.ty
+export SMTP_PORT=1234
+export SMTP_USER=qwer@qwer.ty
+read -s -p "SMTP_PASS: " SMTP_PASS
+export SMTP_PASS
+```
+
 ## development
 
 ```shell
