@@ -5,6 +5,7 @@ import functools
 import logging
 import smtplib
 import socket
+import time
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -26,6 +27,7 @@ def _repeat_on_exceptions(num_times=3, *exceptions):
                 except Exception as e:
                     if (not exceptions or e.__class__ in exceptions) and count < num_times:
                         count += 1
+                        time.sleep(30)
                         continue
                     else:
                         raise
