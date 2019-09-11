@@ -24,10 +24,10 @@ setup(
     packages=['watch_diff'],
     extras_require={
         'dev': [
-            'setuptools==40.6.3',
-            'tox==3.6.1',
-            'twine==1.12.1',
-            'wheel==0.32.3',
+            'setuptools==41.2.0',
+            'tox==3.14.0',
+            'twine==1.14.0',
+            'wheel==0.33.6',
         ]
     },
     license='MIT',
