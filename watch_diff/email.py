@@ -4,6 +4,7 @@
 import functools
 import logging
 import smtplib
+import socket
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -13,7 +14,7 @@ from email.utils import make_msgid, formatdate
 logger = logging.getLogger(__name__)
 
 
-def _repeat_on_exception(num_times=3, exception=None):
+def _repeat_on_exceptions(num_times=3, *exceptions):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
@@ -23,7 +24,7 @@ def _repeat_on_exception(num_times=3, exception=None):
                     logger.info('running func: "{}", count: {}'.format(func.__name__, count))
                     return func(*args, **kwargs)
                 except Exception as e:
-                    if (not exception or e.__class__ == exception) and count < num_times:
+                    if (not exceptions or e.__class__ in exceptions) and count < num_times:
                         count += 1
                         continue
                     else:
@@ -42,11 +43,11 @@ class Email:
         self._from_name = from_name
         self._recipient = recipient
 
-    @_repeat_on_exception(3, smtplib.SMTPServerDisconnected)
+    @_repeat_on_exceptions(3, smtplib.SMTPServerDisconnected, socket.gaierror, socket.timeout)
     def _smtp_connect(self, smtp_host, smtp_port):
         return smtplib.SMTP(host=self._smtp_host, port=self._smtp_port)
 
-    @_repeat_on_exception(3, smtplib.SMTPAuthenticationError)
+    @_repeat_on_exceptions(3, smtplib.SMTPAuthenticationError, socket.gaierror, socket.timeout)
     def _smtp_login(self, session, smtp_user, smtp_pass):
         session.login(self._smtp_user, self._smtp_pass)
 
