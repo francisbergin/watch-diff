@@ -44,12 +44,7 @@ export SMTP_PASS
 ## development
 
 ```shell
-# setup
-python3 -m venv venv && . venv/bin/activate
-
-# editable install
-pip install -e .[dev]
-
-# running tests
+uv sync
+uv build
 python -m unittest -v
 ```
