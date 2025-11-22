@@ -1,10 +1,19 @@
-"""
-"""
+from watch_diff.command import Command
+from watch_diff.diff import Diff
+from watch_diff.email import Email
+from watch_diff.format import (
+    ConsoleFormatter,
+    DefaultFormatter,
+    HTMLFormatter,
+    OutputFormatting,
+)
 
-__version__ = '0.6.0'
-
-
-from .command import Command
-from .diff import Diff
-from .email import Email
-from .format import DefaultFormatter, ConsoleFormatter, HTMLFormatter, OutputFormatting
+__all__ = [
+    "Command",
+    "Diff",
+    "Email",
+    "ConsoleFormatter",
+    "DefaultFormatter",
+    "HTMLFormatter",
+    "OutputFormatting",
+]

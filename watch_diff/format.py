@@ -1,32 +1,31 @@
-"""
-"""
-
 class DefaultFormatter:
-    header_start = ''
-    header_end = ''
-    addition_start = ''
-    addition_end = ''
-    subtraction_start = ''
-    subtraction_end = ''
+    header_start = ""
+    header_end = ""
+    addition_start = ""
+    addition_end = ""
+    subtraction_start = ""
+    subtraction_end = ""
+
 
 class ConsoleFormatter(DefaultFormatter):
-    header_start = '\033[1m'
-    header_end = '\033[0m'
-    addition_start = '\033[92m'
-    addition_end = '\033[0m'
-    subtraction_start = '\033[91m'
-    subtraction_end = '\033[0m'
+    header_start = "\033[1m"
+    header_end = "\033[0m"
+    addition_start = "\033[92m"
+    addition_end = "\033[0m"
+    subtraction_start = "\033[91m"
+    subtraction_end = "\033[0m"
+
 
 class HTMLFormatter(DefaultFormatter):
-    header_start = '<b>'
-    header_end = '</b>'
+    header_start = "<b>"
+    header_end = "</b>"
     addition_start = '<span style="color:green">'
-    addition_end = '</span>'
+    addition_end = "</span>"
     subtraction_start = '<span style="color:red">'
-    subtraction_end = '</span>'
+    subtraction_end = "</span>"
+
 
 class OutputFormatting:
-
     def __str__(self):
         return self._format(DefaultFormatter)
 
@@ -38,7 +37,7 @@ class OutputFormatting:
         if not full_html:
             return partial_html
         else:
-            html_page = '''
+            html_page = """
                 <html>
                     <body>
                         <pre>
@@ -46,6 +45,6 @@ class OutputFormatting:
                         </pre>
                     </body>
                 </html>
-            '''
-            html_page = '\n'.join([l.strip() for l in html_page.splitlines()])
+            """
+            html_page = "\n".join([line.strip() for line in html_page.splitlines()])
             return html_page.format(partial_html)

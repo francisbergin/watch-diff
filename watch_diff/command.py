@@ -1,23 +1,18 @@
-"""
-"""
-
 import datetime
 import subprocess
 
-from . import diff
-from . import format
+from watch_diff import diff, format
 
 
 class Command(format.OutputFormatting):
-
     def __init__(self, command):
         self._command = command
 
-        self._previous_datetime = ''
-        self._previous_result = ''
+        self._previous_datetime = ""
+        self._previous_result = ""
 
-        self._current_datetime = ''
-        self._current_result = ''
+        self._current_datetime = ""
+        self._current_result = ""
 
     def __bool__(self):
         return bool(self._current_result)
@@ -26,7 +21,12 @@ class Command(format.OutputFormatting):
         return self._current_result
 
     def _diff(self):
-        return diff.Diff(self._previous_result, self._current_result, self._previous_datetime, self._current_datetime)
+        return diff.Diff(
+            self._previous_result,
+            self._current_result,
+            self._previous_datetime,
+            self._current_datetime,
+        )
 
     def _run(self):
         return subprocess.getoutput(self._command)
