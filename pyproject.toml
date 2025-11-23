@@ -27,3 +27,7 @@ build-backend = "hatchling.build"
 dev = [
     "ruff>=0.14.6",
 ]
+
+[tool.ruff]
+line-length = 120
+target-version = "py314"

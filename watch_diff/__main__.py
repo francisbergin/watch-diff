@@ -10,12 +10,8 @@ from watch_diff import command, email
 
 logger = logging.getLogger(__name__)
 
-parser = argparse.ArgumentParser(
-    description="Watch command output and get notified on changes"
-)
-logging_group = parser.add_argument_group(
-    "logging level"
-).add_mutually_exclusive_group()
+parser = argparse.ArgumentParser(description="Watch command output and get notified on changes")
+logging_group = parser.add_argument_group("logging level").add_mutually_exclusive_group()
 logging_group.add_argument(
     "-v",
     "--verbose",
@@ -55,9 +51,7 @@ def _main():
         smtp_port = os.environ.get("SMTP_PORT") or input("SMTP_PORT: ")
         smtp_user = os.environ.get("SMTP_USER") or input("SMTP_USER: ")
         smtp_pass = os.environ.get("SMTP_PASS") or getpass.getpass("SMTP_PASS: ")
-        e = email.Email(
-            smtp_host, smtp_port, smtp_user, smtp_pass, "watch-diff", args.recipient
-        )
+        e = email.Email(smtp_host, smtp_port, smtp_user, smtp_pass, "watch-diff", args.recipient)
 
     first_run = True
     c = command.Command(args.command)

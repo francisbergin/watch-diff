@@ -17,14 +17,10 @@ def _repeat_on_exceptions(num_times=3, *exceptions):
             count = 1
             while True:
                 try:
-                    logger.info(
-                        'running func: "{}", count: {}'.format(func.__name__, count)
-                    )
+                    logger.info('running func: "{}", count: {}'.format(func.__name__, count))
                     return func(*args, **kwargs)
                 except Exception as e:
-                    if (
-                        not exceptions or e.__class__ in exceptions
-                    ) and count < num_times:
+                    if (not exceptions or e.__class__ in exceptions) and count < num_times:
                         count += 1
                         time.sleep(30)
                         continue
@@ -37,9 +33,7 @@ def _repeat_on_exceptions(num_times=3, *exceptions):
 
 
 class Email:
-    def __init__(
-        self, smtp_host, smtp_port, smtp_user, smtp_pass, from_name, recipient
-    ):
+    def __init__(self, smtp_host, smtp_port, smtp_user, smtp_pass, from_name, recipient):
         self._smtp_host = smtp_host
         self._smtp_port = smtp_port
         self._smtp_user = smtp_user
@@ -47,15 +41,11 @@ class Email:
         self._from_name = from_name
         self._recipient = recipient
 
-    @_repeat_on_exceptions(
-        3, smtplib.SMTPServerDisconnected, socket.gaierror, socket.timeout
-    )
+    @_repeat_on_exceptions(3, smtplib.SMTPServerDisconnected, socket.gaierror, socket.timeout)
     def _smtp_connect(self, smtp_host, smtp_port):
         return smtplib.SMTP(host=self._smtp_host, port=self._smtp_port)
 
-    @_repeat_on_exceptions(
-        3, smtplib.SMTPAuthenticationError, socket.gaierror, socket.timeout
-    )
+    @_repeat_on_exceptions(3, smtplib.SMTPAuthenticationError, socket.gaierror, socket.timeout)
     def _smtp_login(self, session, smtp_user, smtp_pass):
         session.login(self._smtp_user, self._smtp_pass)
 
