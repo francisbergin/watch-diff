@@ -2,13 +2,23 @@
 
 [![PyPI](https://img.shields.io/pypi/v/watch-diff.svg)](https://pypi.org/project/watch-diff)
 
-## setup
+Periodically run a command and receive nice diff styled emails on output changes.
+
+## Features
+
+- Supports Python >= 3.10
+- Uses only Python Standard Library
+- Sends email diff in both text and html form
+- Output changes to CLI and optionally to SMTP
+- Uses `Message-ID` and `In-Reply-To` to group email threads
+
+## Setup
 
 ```shell
 pip install watch-diff
 ```
 
-## usage
+## Usage
 
 ```console
 $ watch-diff --help
@@ -31,7 +41,7 @@ logging level:
   -d, --debug           show debugging statements
 ```
 
-## credentials
+## SMTP Setup
 
 ```shell
 export SMTP_HOST=qwer.ty
@@ -41,7 +51,7 @@ read -s -p "SMTP_PASS: " SMTP_PASS
 export SMTP_PASS
 ```
 
-## development
+## Development
 
 ```shell
 uv sync
