@@ -4,10 +4,10 @@ version = "1.2.0"
 description = "Watch command output and get notified on changes"
 readme = "README.md"
 authors = [
-    {name = "Francis Bergin", email = "me@francisbergin.ca"},
+    {name = "Francis Bergin", email = "contact@francisbergin.net"},
 ]
 maintainers = [
-    {name = "Francis Bergin", email = "me@francisbergin.ca"},
+    {name = "Francis Bergin", email = "contact@francisbergin.net"},
 ]
 license = "MIT"
 requires-python = ">=3.10"
