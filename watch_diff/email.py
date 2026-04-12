@@ -2,6 +2,7 @@ import functools
 import logging
 import smtplib
 import socket
+import ssl
 import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -71,7 +72,8 @@ class Email:
 
         s = self._smtp_connect(self._smtp_host, self._smtp_port)
         s.ehlo()
-        s.starttls()
+        context = ssl.create_default_context()
+        s.starttls(context=context)
         s.ehlo()
         self._smtp_login(s, self._smtp_user, self._smtp_pass)
         s.sendmail(self._smtp_user, self._recipient, msg.as_string())
